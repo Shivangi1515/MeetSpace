@@ -2,6 +2,8 @@ express
 cors
 socket.io
 nodemon
-bcrypt
+bcryptjs
 http-status
 mongoose
+crypto
+dotenv
