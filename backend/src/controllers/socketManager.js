@@ -1,33 +1,40 @@
-import { Server } from "socket.io";
+import { Server } from "socket.io"
+
 
 let connections = {}
 let messages = {}
 let timeOnline = {}
 
 export const connectToSocket = (server) => {
-    const io = new Server(server);
+    const io = new Server(server, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"],
+            allowedHeaders: ["*"],
+            credentials: true
+        }
+    });
+
 
     io.on("connection", (socket) => {
+
+        console.log("SOMETHING CONNECTED")
+
         socket.on("join-call", (path) => {
 
             if (connections[path] === undefined) {
-
                 connections[path] = []
-
-
             }
-            connections[path].push(socket.id);
+            connections[path].push(socket.id)
+
             timeOnline[socket.id] = new Date();
-            // connections[path].forEach(elem =>{
 
-
-            //     io.to(elem);
-
-
-
+            // connections[path].forEach(elem => {
+            //     io.to(elem)
             // })
-            for (let a = 0; a < connections[path].length; i++) {
-                io.to(connections[path][a]).emit("user-joined", socket.id, connections[path]);
+
+            for (let a = 0; a < connections[path].length; a++) {
+                io.to(connections[path][a]).emit("user-joined", socket.id, connections[path])
             }
 
             if (messages[path] !== undefined) {
@@ -38,9 +45,11 @@ export const connectToSocket = (server) => {
             }
 
         })
+
         socket.on("signal", (toId, message) => {
             io.to(toId).emit("signal", socket.id, message);
         })
+
         socket.on("chat-message", (data, sender) => {
 
             const [matchingRoom, found] = Object.entries(connections)
@@ -69,7 +78,8 @@ export const connectToSocket = (server) => {
             }
 
         })
-        socket.on("disconnect", (toId, message) => {
+
+        socket.on("disconnect", () => {
 
             var diffTime = Math.abs(timeOnline[socket.id] - new Date())
 
@@ -101,7 +111,9 @@ export const connectToSocket = (server) => {
 
         })
 
-    });
+
+    })
+
 
     return io;
 }
