@@ -1,13 +1,6 @@
 # <p align="center">🌌 MeetSpace 🌌</p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/license/Shivangi1515/MeetSpace?style=for-the-badge&color=2f6feb" alt="License" />
-  <img src="https://img.shields.io/github/stars/Shivangi1515/MeetSpace?style=for-the-badge&color=ff9839" alt="Stars" />
-  <img src="https://img.shields.io/github/forks/Shivangi1515/MeetSpace?style=for-the-badge&color=10b981" alt="Forks" />
-  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&color=ff4a5a" alt="PRs Welcome" />
-</p>
-
-<p align="center">
   <strong>MeetSpace</strong> is a premium, secure, and fully decentralized real-time video collaboration and meeting platform. Built with a modern full-stack architecture, it delivers high-performance peer-to-peer audio/video streaming, active speaker detection, dynamic call reaction overlays, persistent meeting notes, and local call recordings directly to the browser.
 </p>
 
