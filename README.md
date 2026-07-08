@@ -184,3 +184,60 @@ cd MeetSpace
    npm start
    ```
 
+---
+
+## 🔑 Environment Variables Guide
+
+### Backend Environment Variables (`backend/.env`)
+- `PORT`: The port the backend express server runs on (defaults to `8000`).
+- `MONGO_URL`: Your MongoDB connection connection string (local instance or cloud MongoDB Atlas cluster).
+- `JWT_SECRET`: A secure custom salt key string used to encrypt local meeting history and session tokens.
+
+### Frontend Environment Variables (`frontend/.env`)
+- `REACT_APP_FIREBASE_API_KEY`: Google Firebase web app authorization key.
+- `REACT_APP_FIREBASE_AUTH_DOMAIN`: Authorized Firebase project redirection domain.
+- `REACT_APP_FIREBASE_PROJECT_ID`: Unique Firebase project identifier.
+- `REACT_APP_FIREBASE_STORAGE_BUCKET`: Google storage cloud bucket endpoint.
+- `REACT_APP_FIREBASE_MESSAGING_SENDER_ID`: Unique sender ID key for push alerts.
+- `REACT_APP_FIREBASE_APP_ID`: App-specific configuration identification hash.
+- `REACT_APP_FIREBASE_MEASUREMENT_ID`: Google analytics tracker token.
+
+---
+
+## 📖 Step-by-Step Usage Guide
+
+### 1. Sign-in & Authentication
+- Launch the application and click **Get Started** or **Login**.
+- Select **Continue with Google** to log in instantly via federated credentials, or register with a unique Email & Password.
+
+### 2. Room Navigation
+- From your dashboard home page, click **New Meeting** to automatically generate a randomized `xxx-xxx-xxx` meeting code.
+- Alternatively, paste an existing meeting code in the join input and click **Join**.
+
+### 3. Joining Lobby Config
+- Check your camera and microphone status inside the Lobby Preview Card.
+- Toggle controls to your preferred default joining states.
+- Type in your Display Name and click **Enter Meeting Room**.
+
+### 4. Meeting Controls
+- **Toolbar Toggles:** Enable or disable camera and microphone streams, share your screen, or float active emoji reactions.
+- **Participants List:** View a list of current participants. If you are not the administrator, click **Request Admin Access**. If you are the Host, hover over any participant to transfer host permissions.
+- **Meeting Notes:** Open the sidebar tab to record personal text notes. They are saved automatically to your browser storage per room code.
+- **Local Recording:** Click the record button to capture the call. Once stopped, your recording is saved to the local IndexedDB database and can be replayed or downloaded from the dashboard.
+
+---
+
+## 🌟 Standout Engineering Highlights
+
+- **Client-Side IndexedDB Recording Store:** Call recordings capture raw screen and microphone MediaStreams directly inside the browser. High-performance chunk conversion stores video logs directly to browser IndexedDB databases without eating up server storage or bandwidth.
+- **Interactive Host Privilege Management:** WebSockets (Socket.io) handle real-time signaling to prompt hosts when guest permissions are requested, ensuring access rules are maintained dynamically.
+- **Dynamic Voice Activity Glow:** Integrates the browser's Web Audio API `AudioContext` to analyze microphone frequency inputs in real time, outlining the active speaker with a dynamic visual glow.
+
+---
+
+## 🚀 Future Enhancements
+
+- **Selective Forwarding Unit (SFU) Integration:** transition from mesh WebRTC to SFU-based audio/video routing to support large scale calls.
+- **Dynamic Whiteboard Canvas:** Collaborative drawing board for team meetings.
+- **Automated AI Call Transcriptions:** Text translations based on microphone tracks during meetings.
+
