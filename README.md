@@ -142,10 +142,10 @@ cd MeetSpace
 ```
 
 ### 2. Configure the Backend
-1. Install dependencies using the `requirements.txt` file:
+1. Install dependencies using the `npm-requirements.txt` file:
    ```bash
    cd backend
-   npm install $(cat requirements.txt)
+   npm install $(cat npm-requirements.txt)
    ```
 2. Create a `.env` file inside the `backend` folder:
    ```env
@@ -156,10 +156,10 @@ cd MeetSpace
 3. Generate a Firebase service account private key JSON file from the Firebase console, name it `firebase-service-account.json`, and place it directly in the `backend/` directory.
 
 ### 3. Configure the Frontend
-1. Install dependencies using the `requirements.txt` file:
+1. Install dependencies using the `npm-requirements.txt` file:
    ```bash
    cd ../frontend
-   npm install $(cat requirements.txt)
+   npm install $(cat npm-requirements.txt)
    ```
 2. Create a `.env` file in the `frontend` folder:
    ```env
