@@ -140,10 +140,10 @@ cd MeetSpace
 ```
 
 ### 2. Configure the Backend
-1. Install dependencies:
+1. Install dependencies using the `requirements.txt` file:
    ```bash
    cd backend
-   npm install
+   npm install $(cat requirements.txt)
    ```
 2. Create a `.env` file inside the `backend` folder:
    ```env
@@ -154,10 +154,10 @@ cd MeetSpace
 3. Generate a Firebase service account private key JSON file from the Firebase console, name it `firebase-service-account.json`, and place it directly in the `backend/` directory.
 
 ### 3. Configure the Frontend
-1. Install dependencies:
+1. Install dependencies using the `requirements.txt` file:
    ```bash
    cd ../frontend
-   npm install
+   npm install $(cat requirements.txt)
    ```
 2. Create a `.env` file in the `frontend` folder:
    ```env
@@ -190,27 +190,3 @@ cd MeetSpace
   ![Lobby View Preview](https://raw.githubusercontent.com/Shivangi1515/MeetSpace/main/frontend/public/background.png)
 - **Active Video Grid & spotlight views**
 - **History Analytics Dashboard**
-
----
-
-## 🤝 Contributing
-
-1. Fork the Repository.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'feat: add some amazing feature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
-
----
-
-## 📜 License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
-
----
-
-## 👤 Author
-
-- **GitHub:** [@Shivangi1515](https://github.com/Shivangi1515)
-- **LinkedIn:** [Shivangi Chaurasia](https://linkedin.com/in/your-profile)
-- **Email:** shivangichaurasia1515@gmail.com
