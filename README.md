@@ -1,7 +1,9 @@
 # <p align="center">🌌 MeetSpace 🌌</p>
 
 <p align="center">
-  <strong>MeetSpace</strong> is a premium, secure, and fully decentralized real-time video collaboration and meeting platform. Built with a modern full-stack architecture, it delivers high-performance peer-to-peer audio/video streaming, active speaker detection, dynamic call reaction overlays, persistent meeting notes, and local call recordings directly to the browser.
+  <strong>MeetSpace</strong> is an enterprise-ready, premium, secure, and fully decentralized real-time video collaboration and meeting platform. Engineered with a robust, modern full-stack architecture, it provides seamless high-performance peer-to-peer audio and video streaming, dynamic active speaker detection, floating real-time emoji reactions, persistent in-meeting personal notes, and fully local client-side call recording utilizing browser APIs.
+  <br/><br/>
+  Designed for modern collaboration, MeetSpace allows users to securely authenticate via standard credentials or Google OAuth, quickly host or join rooms with custom randomized meeting codes, manage session participants through advanced host transfers, and track call histories with rich search, sorting, and filtering capabilities.
 </p>
 
 ---
@@ -182,11 +184,3 @@ cd MeetSpace
    npm start
    ```
 
----
-
-## 📌 Screenshots & Previews
-
-- **Lobby Configuration Preview:**
-  ![Lobby View Preview](https://raw.githubusercontent.com/Shivangi1515/MeetSpace/main/frontend/public/background.png)
-- **Active Video Grid & spotlight views**
-- **History Analytics Dashboard**
