@@ -1191,9 +1191,15 @@ export default function VideoMeetComponent() {
                                     borderRadius: "10px",
                                     fontSize: "1.05rem",
                                     fontWeight: 700,
-                                    bgcolor: "var(--primary)",
+                                    bgcolor: "#2f6feb !important",
+                                    color: "white !important",
                                     boxShadow: "0 4px 14px rgba(47, 111, 235, 0.4)",
-                                    "&:hover": { bgcolor: "var(--primary-hover)" }
+                                    "&:hover": { bgcolor: "#1e5bc8 !important" },
+                                    "&.Mui-disabled": {
+                                        bgcolor: "rgba(47, 111, 235, 0.5) !important",
+                                        color: "rgba(255, 255, 255, 0.5) !important",
+                                        boxShadow: "none"
+                                    }
                                 }}
                             >
                                 Enter Meeting Room
