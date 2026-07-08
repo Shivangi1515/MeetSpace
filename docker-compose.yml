@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: meetspace-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: meetspace-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - MONGO_URL=mongodb://mongodb:27017/meetspace
+      - JWT_SECRET=meetspace_local_dev_secret_key
+    volumes:
+      - ./backend/firebase-service-account.json:/app/firebase-service-account.json:ro
+    depends_on:
+      - mongodb
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_FIREBASE_API_KEY=your_key_here
+        - REACT_APP_FIREBASE_AUTH_DOMAIN=your_domain_here
+        - REACT_APP_FIREBASE_PROJECT_ID=your_id_here
+        - REACT_APP_FIREBASE_STORAGE_BUCKET=your_bucket_here
+        - REACT_APP_FIREBASE_MESSAGING_SENDER_ID=your_sender_id_here
+        - REACT_APP_FIREBASE_APP_ID=your_app_id_here
+        - REACT_APP_FIREBASE_MEASUREMENT_ID=your_measurement_id_here
+    container_name: meetspace-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:

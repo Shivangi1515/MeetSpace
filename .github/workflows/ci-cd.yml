@@ -1,0 +1,66 @@
+name: MeetSpace CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install & Verify Backend
+      run: |
+        cd backend
+        npm ci
+        # Verify app file compiles and backend dependencies resolve
+        node --check src/app.js
+
+    - name: Install & Compile Frontend
+      run: |
+        cd frontend
+        npm ci
+        # Inject mock credentials for compilation validation
+        CI=false REACT_APP_FIREBASE_API_KEY=mock_key REACT_APP_FIREBASE_AUTH_DOMAIN=mock_domain REACT_APP_FIREBASE_PROJECT_ID=mock_id REACT_APP_FIREBASE_STORAGE_BUCKET=mock_bucket REACT_APP_FIREBASE_MESSAGING_SENDER_ID=mock_sender REACT_APP_FIREBASE_APP_ID=mock_app npm run build
+
+  docker-build-check:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Backend Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile
+        push: false
+
+    - name: Build Frontend Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./frontend
+        file: ./frontend/Dockerfile
+        build-args: |
+          REACT_APP_FIREBASE_API_KEY=mock_key
+          REACT_APP_FIREBASE_AUTH_DOMAIN=mock_domain
+          REACT_APP_FIREBASE_PROJECT_ID=mock_id
+          REACT_APP_FIREBASE_STORAGE_BUCKET=mock_bucket
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID=mock_sender
+          REACT_APP_FIREBASE_APP_ID=mock_app
+        push: false
