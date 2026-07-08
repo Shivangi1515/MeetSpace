@@ -1,117 +1,93 @@
-# MeetSpace
+# <p align="center">🌌 MeetSpace 🌌</p>
 
-MeetSpace is a premium, secure, and developer-friendly real-time video collaboration and meeting platform. Designed as a robust full-stack solution, it combines high-performance WebRTC peer-to-peer audio/video streaming, active speaker detection, live text messaging, in-meeting reaction overlays, personal notes persistence, and client-side meeting recording.
+<p align="center">
+  <img src="https://img.shields.io/github/license/Shivangi1515/MeetSpace?style=for-the-badge&color=2f6feb" alt="License" />
+  <img src="https://img.shields.io/github/stars/Shivangi1515/MeetSpace?style=for-the-badge&color=ff9839" alt="Stars" />
+  <img src="https://img.shields.io/github/forks/Shivangi1515/MeetSpace?style=for-the-badge&color=10b981" alt="Forks" />
+  <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge&color=ff4a5a" alt="PRs Welcome" />
+</p>
 
----
-
-## Table of Contents
-- [Key Features](#key-features)
-- [Architecture & Tech Stack](#architecture--tech-stack)
-- [Project Directory Structure](#project-directory-structure)
-- [Real-Time Communication Workflow](#real-time-communication-workflow)
-- [Database Schema & Models](#database-schema--models)
-- [API Overview](#api-overview)
-- [Setup & Installation](#setup--installation)
-- [Environment Variables](#environment-variables)
-- [Usage Guide](#usage-guide)
-- [Standout Engineering Highlights](#standout-engineering-highlights)
-- [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
+<p align="center">
+  <strong>MeetSpace</strong> is a premium, secure, and fully decentralized real-time video collaboration and meeting platform. Built with a modern full-stack architecture, it delivers high-performance peer-to-peer audio/video streaming, active speaker detection, dynamic call reaction overlays, persistent meeting notes, and local call recordings directly to the browser.
+</p>
 
 ---
 
-## Key Features
+## 🚀 Tech Stack & Core Technologies
 
-### 🛡️ Authentication & User Access
-- **Federated Login:** Seamless authentication using Google Sign-In powered by Firebase Authentication.
-- **Classic Email/Password:** Secure sign-up and login with password hashes securely verified on top of Firebase infrastructure.
-- **Session Tokens:** Custom Node.js/Express backend that validates Firebase ID tokens and issues local JSON Web Tokens (JWT) for secure Mongo database access.
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+  <img src="https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white" alt="Node" />
+  <img src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express" />
+  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <br/>
+  <img src="https://img.shields.io/badge/Socket.io-010101?style=for-the-badge&logo=socket.io&logoColor=white" alt="Socket.io" />
+  <img src="https://img.shields.io/badge/WebRTC-333333?style=for-the-badge&logo=webrtc&logoColor=white" alt="WebRTC" />
+  <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
+  <img src="https://img.shields.io/badge/MUI-007FFF?style=for-the-badge&logo=mui&logoColor=white" alt="MUI" />
+</p>
 
-### 🎥 Live Meeting Experience
-- **Preserved Lobby Settings:** Join-lobby preview where you can toggle your camera and microphone. Your exact lobby settings are preserved when entering the meeting room.
-- **Admin (Host) Controls:** The first participant to enter the meeting becomes the Admin (Host). 
-  - Hosts can transfer admin privileges directly to any remote user in the participants tab.
-  - Remote users can **Request Admin Access** via a button, sending a real-time modal prompt to the current host to accept or decline.
-  - Privilege auto-transfers to the next available participant if the host disconnects.
-- **Active Speaker Tracking:** Automatic visual speaker highlight using the Web Audio API to detect voice activity in real time.
-- **Spotlight vs. Grid Layout:** Easily pin or unpin any participant (including yourself) to switch between standard grid view and focused spotlight layout.
+---
 
-### 💬 Real-Time Collaboration
-- **In-Call Chat:** Instant message delivery to all room members via WebSockets.
-- **Emoji Reactions:** Float visual reaction bubbles (👍, 👏, 🎉, ❤️, 😂, 😮) dynamically across all participants' screens.
+## ⭐ Key Highlights
+
+* **Direct Peer-to-Peer Mesh Streaming:** Decentralized high-definition WebRTC video and audio channels that minimize latency and server overhead.
+* **Preserved Lobby Controls:** Configure your microphone and camera on the join page, and enter the meeting room with your exact configuration preserved.
+* **Request & Transfer Host Access:** 
+  - The first user to join a room is automatically assigned as the Admin/Host.
+  - Remote users can **Request Admin Access** with one click.
+  - The active Host receives an interactive dialog modal to accept (transfer privileges) or decline.
+  - Host rights automatically transition to the next participant if the current host leaves.
+* **Active Speaker Detection:** Real-time Web Audio API frequency analysis highlights the speaking user with a dynamic glow border.
+- **Client-Side IndexedDB Recording:** Call recordings are recorded directly from your media streams on the client side using the browser's `MediaRecorder` API and saved as Blobs to your browser's persistent `IndexedDB` storage, allowing video playback, downloads, and deletes from your personal dashboard without any server-side recording files.
+- **Dynamic Emoji Reactions:** Broadcast visual reaction bubbles (👍, 👏, 🎉, ❤️, 😂, 😮) that float up across all participants' screens.
 - **Persistent Personal Notes:** Take personal meeting notes that are automatically saved and persisted to the browser's local storage per room code.
-- **Meeting Recording:** Locally record video calls directly to your browser's persistent IndexedDB storage using the browser's MediaStream Recording API. Features an integrated video player on the dashboard to replay, download, or delete saved meetings.
-
-### 📊 Meeting Logs & History
-- **Automatic History Sync:** Periodic background session sync (every 15 seconds) to sync duration, active participant counts, chat counts, and titles to prevent stale logs.
-- **Advanced History Dashboard:** Search, filter logs by timeframe (today, week, month), sort by duration or participants, delete entries, or pin important codes to the top of your dashboard.
 
 ---
 
-## Architecture & Tech Stack
-
-MeetSpace is built with a decoupled client-server architecture:
-
-| Component | Technology | Description |
-| :--- | :--- | :--- |
-| **Frontend** | React, React Router Dom v7 | Single Page Application framework with client-side routing. |
-| **UI Library** | Material UI (MUI), Emotion | Sleek styling, custom theme tokens, and modern visual cards. |
-| **Backend** | Node.js, Express.js | API server and REST endpoint routing. |
-| **Real-Time** | WebSockets (Socket.io) | Signaling server for WebRTC negotiations, chat, and room states. |
-| **Streaming** | WebRTC (Simple RTCPeerConnection) | Direct peer-to-peer streaming of high-quality video & audio. |
-| **Database** | MongoDB, Mongoose | Persistence layer for meeting logs and user profiles. |
-| **Authentication** | Firebase Auth (Client & Admin SDK) | External identity provider and secure token generation. |
-| **Persistence** | Browser IndexedDB, LocalStorage | Client-side database for recording file blobs and personal notes. |
-
----
-
-## Project Directory Structure
+## 📂 Project Directory Structure
 
 ```
 MeetSpace/
 ├── backend/
 │   ├── src/
 │   │   ├── controllers/
-│   │   │   ├── socketManager.js       # Socket.io connection signaling & host roles
-│   │   │   └── user.controller.js     # User profiles, Firebase login sync & history REST APIs
+│   │   │   ├── socketManager.js       # WebSocket connections signaling & host privileges
+│   │   │   └── user.controller.js     # Rest APIs for profiles and meeting history
 │   │   ├── models/
-│   │   │   ├── meeting.model.js       # Mongoose Meeting schema (stats, codes, metadata)
-│   │   │   └── user.model.js          # Mongoose User schema (identity and auth tokens)
+│   │   │   ├── meeting.model.js       # MongoDB Meeting schema
+│   │   │   └── user.model.js          # MongoDB User schema
 │   │   ├── routes/
-│   │   │   └── users.routes.js        # REST endpoints and rate-limiters
-│   │   └── app.js                     # Server launcher, DB connection & Socket initializer
-│   ├── firebase-service-account.json  # Firebase credentials (ignored)
-│   └── package.json                   # Backend server dependencies
+│   │   │   └── users.routes.js        # Express endpoints
+│   │   └── app.js                     # Server launcher & MongoDB connector
+│   └── package.json                   # Backend dependencies
 │
 ├── frontend/
 │   ├── public/
 │   │   ├── favicon.svg                # Brand icon logo
-│   │   ├── index.html                 # Main HTML template
-│   │   └── manifest.json              # Web app manifest properties
+│   │   ├── index.html                 # HTML Template
+│   │   └── manifest.json              # Web app manifest
 │   ├── src/
 │   │   ├── contexts/
-│   │   │   └── AuthContext.jsx        # Authentication wrapper, storage, and API services
+│   │   │   └── AuthContext.jsx        # Auth state context wrapper
 │   │   ├── pages/
 │   │   │   ├── authentication.jsx     # Google & Email Login forms
-│   │   │   ├── history.jsx            # Advanced search/sort/filter meeting history dashboard
+│   │   │   ├── history.jsx            # Filter/sort meeting logs dashboard
 │   │   │   ├── home.jsx               # Dashboard controls & local recording player
-│   │   │   ├── landing.jsx            # Landing page
-│   │   │   └── VideoMeet.jsx          # Meeting client (WebRTC, notes, socket events, recording)
+│   │   │   ├── landing.jsx            # Product landing page
+│   │   │   └── VideoMeet.jsx          # Live meeting client (WebRTC, notes, socket events)
 │   │   ├── styles/
-│   │   │   └── videoComponent.module.css # Stylesheet for call view components
+│   │   │   └── videoComponent.module.css # Component styles
 │   │   ├── utils/
 │   │   │   ├── firebase.js            # Firebase App initialization
 │   │   │   └── recordingsDB.js        # IndexedDB wrapper for local call recordings
-│   │   ├── App.js                     # Main Router layout
-│   │   └── index.js                   # Client bundle initializer
-│   └── package.json                   # Frontend dependencies and scripts
+│   │   └── App.js                     # Main Router layout
+│   └── package.json                   # Frontend dependencies
 ```
 
 ---
 
-## Real-Time Communication Workflow
+## 🔄 Real-Time Communication Workflow
 
 MeetSpace establishes mesh WebRTC peer connections using a Socket.io signaling server:
 
@@ -140,48 +116,9 @@ sequenceDiagram
     Note over User A, User B: P2P Audio/Video Streams Established
 ```
 
-1. **Room Join:** Clients execute `join-call` transmitting credentials. The server tracks and broadcasts a unified `participant-list` specifying the active Host.
-2. **SDP Exchange:** The joining peer receives active connection IDs and initiates an `RTCPeerConnection` for each client. Offers and Answers are passed back and forth through the socket server.
-3. **ICE Candidates:** Interactive Connectivity Establishment (ICE) candidates are generated and relayed to negotiate network routes.
-4. **Mesh Streaming:** Peer-to-peer streams are bound to local UI components once negotiations complete.
-
 ---
 
-## Database Schema & Models
-
-### User Schema (`user.model.js`)
-Stores authenticated user records synced from Firebase login payloads.
-```json
-{
-  "name": "String (required)",
-  "username": "String (required, unique)",
-  "password": "String (required, hashed)",
-  "email": "String (unique, sparse)",
-  "isEmailVerified": "Boolean (default: false)",
-  "token": "String",
-  "verificationToken": "String",
-  "resetPasswordToken": "String",
-  "resetPasswordExpires": "Date"
-}
-```
-
-### Meeting Schema (`meeting.model.js`)
-Logs session metrics for historical statistics.
-```json
-{
-  "user_id": "String",
-  "meetingCode": "String (required)",
-  "date": "Date (default: Date.now)",
-  "duration": "Number (seconds, default: 0)",
-  "participantsCount": "Number (default: 1)",
-  "chatCount": "Number (default: 0)",
-  "meetingTitle": "String (default: 'MeetSpace Session')"
-}
-```
-
----
-
-## API Overview
+## 🛠️ API Overview
 
 All backend endpoints reside under `/api/v1/users` and use rate-limiting and authorization tokens where applicable.
 
@@ -196,13 +133,11 @@ All backend endpoints reside under `/api/v1/users` and use rate-limiting and aut
 
 ---
 
-## Setup & Installation
-
-Follow these steps to run MeetSpace locally on your machine:
+## 💻 Setup & Installation
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v16+ recommended)
-- [MongoDB](https://www.mongodb.com/) (Local server or MongoDB Atlas URL)
+- [Node.js](https://nodejs.org/) (v16+)
+- [MongoDB](https://www.mongodb.com/) (Local server or Atlas URL)
 - A [Firebase Project](https://console.firebase.google.com/) with Google Sign-in enabled
 
 ### 1. Clone the Repository
@@ -212,7 +147,7 @@ cd MeetSpace
 ```
 
 ### 2. Configure the Backend
-1. Navigate to the backend directory and install dependencies:
+1. Install dependencies:
    ```bash
    cd backend
    npm install
@@ -223,10 +158,10 @@ cd MeetSpace
    MONGO_URL=your_mongodb_connection_string
    JWT_SECRET=your_custom_jwt_secret_phrase
    ```
-3. Generate a Firebase service account private key JSON file from the Firebase console (*Project Settings -> Service Accounts*), name it `firebase-service-account.json`, and place it directly in the `backend/` directory.
+3. Generate a Firebase service account private key JSON file from the Firebase console, name it `firebase-service-account.json`, and place it directly in the `backend/` directory.
 
 ### 3. Configure the Frontend
-1. Navigate to the frontend directory and install dependencies:
+1. Install dependencies:
    ```bash
    cd ../frontend
    npm install
@@ -243,107 +178,46 @@ cd MeetSpace
    ```
 
 ### 4. Running the Application
-1. **Start the Backend server:**
+1. **Start the Backend:**
    ```bash
    cd backend
    npm run dev
    ```
-   The backend should start on `http://localhost:8000`.
-2. **Start the Frontend development server:**
+2. **Start the Frontend:**
    ```bash
    cd frontend
    npm start
    ```
-   The frontend should spin up on `http://localhost:3000`.
 
 ---
 
-## Environment Variables
+## 📌 Screenshots & Previews
 
-### Backend Environment Variables
-| Variable | Description |
-| :--- | :--- |
-| `PORT` | The port the Express backend server listens on (defaults to 8000). |
-| `MONGO_URL` | MongoDB connection URI string for persistence. |
-| `JWT_SECRET` | Secret string key used for signing local session web tokens. |
-
-### Frontend Environment Variables
-| Variable | Description |
-| :--- | :--- |
-| `REACT_APP_FIREBASE_API_KEY` | Firebase API Key. |
-| `REACT_APP_FIREBASE_AUTH_DOMAIN` | Firebase Authentication Domain. |
-| `REACT_APP_FIREBASE_PROJECT_ID` | Firebase Project ID. |
-| `REACT_APP_FIREBASE_STORAGE_BUCKET` | Firebase Storage Bucket. |
-| `REACT_APP_FIREBASE_MESSAGING_SENDER_ID` | Firebase Messaging Sender ID. |
-| `REACT_APP_FIREBASE_APP_ID` | Firebase App ID. |
-| `REACT_APP_FIREBASE_MEASUREMENT_ID` | Firebase Google Analytics Measurement ID. |
+- **Lobby Configuration Preview:**
+  ![Lobby View Preview](https://raw.githubusercontent.com/Shivangi1515/MeetSpace/main/frontend/public/background.png)
+- **Active Video Grid & spotlight views**
+- **History Analytics Dashboard**
 
 ---
 
-## Screenshots / Preview Placeholders
+## 🤝 Contributing
 
-This section outlines screenshots you can link in the repository assets directory:
-
-- **Lobby View:** `![Lobby View Preview](docs/assets/lobby_preview.png)`
-  *The preview card where users configure their camera and microphone before joining.*
-- **Meeting Room Grid:** `![Active Meeting Room](docs/assets/active_grid.png)`
-  *Mesh grids displaying multiple concurrent video tiles with active speaker glowing borders.*
-- **Host Transfer & Requests:** `![Host Approval Modal](docs/assets/host_transfer.png)`
-  *The host confirmation dialog popover indicating a guest has requested admin privileges.*
-- **Searchable Logs Dashboard:** `![History Page](docs/assets/history_page.png)`
-  *Dashboard filtering and sorting previous meeting logs, pinned sessions, and durations.*
+1. Fork the Repository.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'feat: add some amazing feature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
 ---
 
-## Usage Guide
+## 📜 License
 
-1. **Sign In:** Go to the application homepage and sign in using **Continue with Google** or register a new account.
-2. **Dashboard Actions:** 
-   - Enter a custom code in the text field and click **Join** to access a specific room.
-   - Click **New Meeting** to automatically generate a unique meeting code and navigate to the lobby.
-3. **Lobby Check:** Confirm your camera and microphone are toggled to your preferred states. Enter your display name and click **Enter Meeting Room**.
-4. **In-Call Interface:**
-   - Use the bottom toolbar to toggle audio, video, screen sharing, reactions, or screen recording.
-   - Expand the right-hand sidebar to view the **Chat Room**, **Participants List** (view or request Host privileges), or record personal **Meeting Notes**.
-5. **View Activity Logs:** Click the history clock icon on the home dashboard to view, sort, search, pin, or clean previous meeting details.
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
 
 ---
 
-## Standout Engineering Highlights
-
-- **Mesh Topology Real-Time Client:** Fully decentralized WebRTC media routing using direct P2P data streams to reduce server-side load.
-- **Client-Side IndexedDB Recording:** Call recordings are captured directly on the client side using the browser's `MediaRecorder` API and saved as Binary Large Objects (Blobs) in the browser's local `IndexedDB` storage, allowing video review and downloads without server-side processing overhead.
-- **Web Audio API VAD (Voice Activity Detection):** Utilizes standard AudioContext analyzer nodes to detect frequency changes in local and remote microphone tracks, highlighting the active speaker with a dynamic UI glow.
-- **State Preservation Pipeline:** Smooth transition from lobby preview elements to active peer streams, ensuring microphone and camera disable instructions are maintained when entering rooms.
-
----
-
-## Future Enhancements
-- **Multi-Peer SFU/MCU Integration:** Transitioning from mesh topology to a Selective Forwarding Unit (SFU) architecture to scale to larger room sizes.
-- **Rich Collaborative Whiteboard:** Real-time canvas sharing for teams during meetings.
-- **Group Breakout Rooms:** Dynamic creation of sub-meetings within a primary call.
-- **Automated AI Transcriptions:** Text transcripts based on microphone tracks during meetings.
-
----
-
-## Contributing
-
-1. **Fork** the repository.
-2. Create your feature branch (`git checkout -b feature/NewFeature`).
-3. Commit your changes (`git commit -m 'feat: add some new feature'`).
-4. Push to the branch (`git push origin feature/NewFeature`).
-5. Open a **Pull Request**.
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Author
+## 👤 Author
 
 - **GitHub:** [@Shivangi1515](https://github.com/Shivangi1515)
-- **LinkedIn:** [Your Name](https://linkedin.com/in/your-profile)
-- **Email:** shivangi@example.com
+- **LinkedIn:** [Shivangi Chaurasia](https://linkedin.com/in/your-profile)
+- **Email:** shivangichaurasia1515@gmail.com
