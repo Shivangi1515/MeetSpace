@@ -5,6 +5,11 @@ const userSchema=new Schema({
     username:{type:String,required:true,unique:true},
     password:{type:String,required:true},
     token:{type:String},
+    email:{type:String, unique:true, sparse:true},
+    isEmailVerified:{type:Boolean, default:false},
+    verificationToken:{type:String},
+    resetPasswordToken:{type:String},
+    resetPasswordExpires:{type:Date}
 
 })
 
