@@ -64,3 +64,32 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID=mock_sender
           REACT_APP_FIREBASE_APP_ID=mock_app
         push: false
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build-and-test, docker-build-check]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Trigger Render Backend Deployment
+      env:
+        RENDER_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      run: |
+        if [ -n "$RENDER_HOOK" ]; then
+          echo "Triggering Render deployment..."
+          curl -f -X POST "$RENDER_HOOK"
+        else
+          echo "WARNING: RENDER_DEPLOY_HOOK secret is not configured. Skipping Render deploy."
+        fi
+
+    - name: Deploy Frontend to Vercel
+      uses: amondnet/vercel-action@v20
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./frontend
+        vercel-args: '--prod'
