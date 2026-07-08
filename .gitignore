@@ -62,3 +62,8 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Firebase service account and secret keys
+firebase-service-account.json
+credentials.json
+*.json.secret
