@@ -339,12 +339,14 @@ export default function History() {
                                 placeholder="Search by code or title..." 
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            <SearchIcon fontSize="small" sx={{ color: "#94a3b8" }} />
-                                        </InputAdornment>
-                                    ),
+                                slotProps={{
+                                    input: {
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <SearchIcon fontSize="small" sx={{ color: "#94a3b8" }} />
+                                            </InputAdornment>
+                                        ),
+                                    }
                                 }}
                                 sx={{ flex: 1, width: "100%", "& .MuiOutlinedInput-root": { borderRadius: "10px" } }}
                             />
