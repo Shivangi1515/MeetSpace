@@ -5,10 +5,12 @@ import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Snackbar, Typography, Checkbox, FormControlLabel, Fade, Divider } from "@mui/material";
+import { Snackbar, Typography, Checkbox, FormControlLabel, Fade, Divider, InputAdornment, IconButton } from "@mui/material";
 import { AuthContext } from "../contexts/AuthContext";
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useNavigate } from "react-router-dom";
 import { signInWithGoogle, auth, sendPasswordResetEmail } from "../utils/firebase";
 
@@ -87,11 +89,81 @@ export default function Authentication() {
     const [message, setMessage] = React.useState("");
     const [formState, setFormState] = React.useState(0); // 0 = Sign In, 1 = Sign Up, 2 = Forgot Password
     const [open, setOpen] = React.useState(false);
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [errors, setErrors] = React.useState({});
 
     const { handleRegister, handleLogin, handleGoogleLogin } = React.useContext(AuthContext);
     const navigate = useNavigate();
+    const validate = () => {
+        let tempErrors = {};
+        if (formState === 1) {
+            // Sign Up validation
+            if (!name.trim()) {
+                tempErrors.name = "Full Name is required";
+            } else if (name.trim().length < 3) {
+                tempErrors.name = "Name must be at least 3 characters";
+            }
+
+            if (!email.trim()) {
+                tempErrors.email = "Email Address is required";
+            } else if (!/\S+@\S+\.\S+/.test(email)) {
+                tempErrors.email = "Email Address is invalid";
+            }
+
+            if (!username.trim()) {
+                tempErrors.username = "Username is required";
+            } else if (username.trim().length < 3) {
+                tempErrors.username = "Username must be at least 3 characters";
+            }
+
+            if (!password) {
+                tempErrors.password = "Password is required";
+            } else {
+                if (password.length < 6) {
+                    tempErrors.password = "Password must be at least 6 characters";
+                }
+                if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                    tempErrors.password = tempErrors.password 
+                        ? tempErrors.password + " and must contain at least one special character" 
+                        : "Password must contain at least one special character (e.g. !@#$%^&*)";
+                }
+            }
+        } else if (formState === 0) {
+            // Sign In validation
+            if (!username.trim()) {
+                tempErrors.username = "Email Address or Username is required";
+            }
+
+            if (!password) {
+                tempErrors.password = "Password is required";
+            } else {
+                if (password.length < 6) {
+                    tempErrors.password = "Password must be at least 6 characters";
+                }
+                if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                    tempErrors.password = tempErrors.password 
+                        ? tempErrors.password + " and must contain at least one special character" 
+                        : "Password must contain at least one special character (e.g. !@#$%^&*)";
+                }
+            }
+        }
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
+
+    const validateForgotPassword = () => {
+        let tempErrors = {};
+        if (!email.trim()) {
+            tempErrors.email = "Email Address is required";
+        } else if (!/\S+@\S+\.\S+/.test(email)) {
+            tempErrors.email = "Email Address is invalid";
+        }
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
 
     const handleAuth = async () => {
+        if (!validate()) return;
         try {
             setError("");
 
@@ -103,27 +175,26 @@ export default function Authentication() {
                 setUsername("");
                 setPassword("");
                 setEmail("");
+                setErrors({});
                 setMessage(result);
                 setOpen(true);
                 setFormState(0);
             }
         } catch (err) {
-            const msg = err?.response?.data?.message || "Something went wrong";
+            const msg = err?.response?.data?.message || err?.message || "Something went wrong";
             setError(msg);
         }
     };
 
     const handleForgotPasswordSubmit = async () => {
-        if (!email.trim()) {
-            setError("Email is required");
-            return;
-        }
+        if (!validateForgotPassword()) return;
         try {
             setError("");
             await sendPasswordResetEmail(auth, email);
             setMessage("Password reset email sent successfully! Please check your inbox.");
             setOpen(true);
             setEmail("");
+            setErrors({});
             setFormState(0);
         } catch (err) {
             const msg = err?.message || "Failed to dispatch password reset email.";
@@ -256,6 +327,7 @@ export default function Authentication() {
                                     onClick={() => {
                                         setFormState(0);
                                         setError("");
+                                        setErrors({});
                                     }}
                                     sx={{
                                         bgcolor: formState === 0 ? "white" : "transparent",
@@ -272,6 +344,7 @@ export default function Authentication() {
                                     onClick={() => {
                                         setFormState(1);
                                         setError("");
+                                        setErrors({});
                                     }}
                                     sx={{
                                         bgcolor: formState === 1 ? "white" : "transparent",
@@ -294,7 +367,12 @@ export default function Authentication() {
                                         fullWidth
                                         label="Full Name"
                                         value={name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) => {
+                                            setName(e.target.value);
+                                            if (errors.name) setErrors({ ...errors, name: "" });
+                                        }}
+                                        error={Boolean(errors.name)}
+                                        helperText={errors.name}
                                         sx={{ mb: 1 }}
                                     />
                                 </Fade>
@@ -308,7 +386,12 @@ export default function Authentication() {
                                     label="Email Address"
                                     type="email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    onChange={(e) => {
+                                        setEmail(e.target.value);
+                                        if (errors.email) setErrors({ ...errors, email: "" });
+                                    }}
+                                    error={Boolean(errors.email)}
+                                    helperText={errors.email}
                                     sx={{ mb: 1 }}
                                 />
                             )}
@@ -321,7 +404,12 @@ export default function Authentication() {
                                         fullWidth
                                         label={formState === 0 ? "Email Address" : "Username"}
                                         value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
+                                        onChange={(e) => {
+                                            setUsername(e.target.value);
+                                            if (errors.username) setErrors({ ...errors, username: "" });
+                                        }}
+                                        error={Boolean(errors.username)}
+                                        helperText={errors.username}
                                         sx={{ mb: 1 }}
                                     />
 
@@ -330,9 +418,27 @@ export default function Authentication() {
                                         required
                                         fullWidth
                                         label="Password"
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) => {
+                                            setPassword(e.target.value);
+                                            if (errors.password) setErrors({ ...errors, password: "" });
+                                        }}
+                                        error={Boolean(errors.password)}
+                                        helperText={errors.password}
+                                        InputProps={{
+                                            endAdornment: (
+                                                <InputAdornment position="end">
+                                                    <IconButton
+                                                        aria-label="toggle password visibility"
+                                                        onClick={() => setShowPassword(!showPassword)}
+                                                        edge="end"
+                                                    >
+                                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment>
+                                            )
+                                        }}
                                     />
                                 </>
                             )}
@@ -349,6 +455,7 @@ export default function Authentication() {
                                         onClick={() => {
                                             setFormState(2);
                                             setError("");
+                                            setErrors({});
                                         }}
                                         sx={{ textTransform: "none", fontWeight: 700, fontSize: "0.85rem" }}
                                     >
@@ -391,6 +498,7 @@ export default function Authentication() {
                                     onClick={() => {
                                         setFormState(0);
                                         setError("");
+                                        setErrors({});
                                     }}
                                     sx={{ mt: 1, textTransform: "none", fontWeight: 700 }}
                                 >
