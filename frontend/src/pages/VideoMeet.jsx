@@ -683,6 +683,9 @@ export default function VideoMeetComponent() {
 
             socketRef.current.on('user-joined', (id, clients) => {
                 clients.forEach((socketListId) => {
+                    if (socketListId === socketIdRef.current) return;
+                    if (connections[socketListId] !== undefined) return;
+
                     connections[socketListId] = new RTCPeerConnection(peerConfigConnections)
                     // Wait for ice candidate       
                     connections[socketListId].onicecandidate = function (event) {
@@ -692,13 +695,14 @@ export default function VideoMeetComponent() {
                     }
 
                     // Wait for stream
-                    connections[socketListId].onaddstream = (event) => {
+                    connections[socketListId].ontrack = (event) => {
                         let videoExists = videoRef.current.find(video => video.socketId === socketListId);
+                        const remoteStream = event.streams[0];
 
                         if (videoExists) {
                             setVideos(videos => {
                                 const updatedVideos = videos.map(video =>
-                                    video.socketId === socketListId ? { ...video, stream: event.stream } : video
+                                    video.socketId === socketListId ? { ...video, stream: remoteStream } : video
                                 );
                                 videoRef.current = updatedVideos;
                                 return updatedVideos;
@@ -706,7 +710,7 @@ export default function VideoMeetComponent() {
                         } else {
                             let newVideo = {
                                 socketId: socketListId,
-                                stream: event.stream,
+                                stream: remoteStream,
                                 autoplay: true,
                                 playsinline: true
                             };
@@ -721,11 +725,15 @@ export default function VideoMeetComponent() {
 
                     // Add local stream
                     if (window.localStream !== undefined && window.localStream !== null) {
-                        connections[socketListId].addStream(window.localStream)
+                        window.localStream.getTracks().forEach(track => {
+                            connections[socketListId].addTrack(track, window.localStream);
+                        });
                     } else {
                         let blackSilence = (...args) => new MediaStream([black(...args), silence()])
                         window.localStream = blackSilence()
-                        connections[socketListId].addStream(window.localStream)
+                        window.localStream.getTracks().forEach(track => {
+                            connections[socketListId].addTrack(track, window.localStream);
+                        });
                     }
                 })
 
@@ -734,7 +742,13 @@ export default function VideoMeetComponent() {
                         if (id2 === socketIdRef.current) continue
 
                         try {
-                            connections[id2].addStream(window.localStream)
+                            const senders = connections[id2].getSenders();
+                            window.localStream.getTracks().forEach(track => {
+                                const senderExists = senders.some(s => s.track === track);
+                                if (!senderExists) {
+                                    connections[id2].addTrack(track, window.localStream);
+                                }
+                            });
                         } catch (e) { }
 
                         connections[id2].createOffer().then((description) => {
