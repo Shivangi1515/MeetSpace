@@ -696,31 +696,31 @@ export default function VideoMeetComponent() {
 
                     // Wait for stream
                     connections[socketListId].ontrack = (event) => {
-                        let videoExists = videoRef.current.find(video => video.socketId === socketListId);
                         const remoteStream = event.streams[0];
 
-                        if (videoExists) {
-                            setVideos(videos => {
-                                const updatedVideos = videos.map(video =>
+                        setVideos(prevVideos => {
+                            const videoExists = prevVideos.find(video => video.socketId === socketListId);
+                            if (videoExists) {
+                                if (videoExists.stream === remoteStream) {
+                                    return prevVideos;
+                                }
+                                const updatedVideos = prevVideos.map(video =>
                                     video.socketId === socketListId ? { ...video, stream: remoteStream } : video
                                 );
                                 videoRef.current = updatedVideos;
                                 return updatedVideos;
-                            });
-                        } else {
-                            let newVideo = {
-                                socketId: socketListId,
-                                stream: remoteStream,
-                                autoplay: true,
-                                playsinline: true
-                            };
-
-                            setVideos(videos => {
-                                const updatedVideos = [...videos, newVideo];
+                            } else {
+                                const newVideo = {
+                                    socketId: socketListId,
+                                    stream: remoteStream,
+                                    autoplay: true,
+                                    playsinline: true
+                                };
+                                const updatedVideos = [...prevVideos, newVideo];
                                 videoRef.current = updatedVideos;
                                 return updatedVideos;
-                            });
-                        }
+                            }
+                        });
                     };
 
                     // Add local stream
